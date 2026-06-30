@@ -1,5 +1,9 @@
 function App() {
-  return <>LinguaFlow</>;
+  return (
+    <>
+      <h1>LinguaFlow</h1>
+    </>
+  );
 }
 
 export default App;
