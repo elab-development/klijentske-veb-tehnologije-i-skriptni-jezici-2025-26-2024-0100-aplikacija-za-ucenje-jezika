@@ -1,5 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
+import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './contexts/AuthContext';
 import Language from './pages/Language';
 import Languages from './pages/Languages';
 import Profile from './pages/Profile';
@@ -8,17 +11,54 @@ import Home from './pages/Home';
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <Toaster
+          position='top-right'
+          toastOptions={{
+            duration: 3000,
+            style: {
+              fontWeight: 700,
+            },
+          }}
+        />
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route
+            path='/'
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
           <Route path='/login' element={<Login />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/languages' element={<Languages />} />
-          <Route path='/language/:id' element={<Language />} />
+          <Route
+            path='/profile'
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/languages'
+            element={
+              <ProtectedRoute>
+                <Languages />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/languages/:id'
+            element={
+              <ProtectedRoute>
+                <Language />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
-      </BrowserRouter>{' '}
-    </>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 
