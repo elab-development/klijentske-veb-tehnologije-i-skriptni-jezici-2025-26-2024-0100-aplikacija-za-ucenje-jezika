@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
+import { UserProgressProvider } from './contexts/UserProgressContext';
 import Language from './pages/Language';
 import Languages from './pages/Languages';
 import Profile from './pages/Profile';
@@ -13,50 +14,52 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Toaster
-          position='top-right'
-          toastOptions={{
-            duration: 3000,
-            style: {
-              fontWeight: 700,
-            },
-          }}
-        />
-        <Routes>
-          <Route
-            path='/'
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
+        <UserProgressProvider>
+          <Toaster
+            position='top-right'
+            toastOptions={{
+              duration: 3000,
+              style: {
+                fontWeight: 700,
+              },
+            }}
           />
-          <Route path='/login' element={<Login />} />
-          <Route
-            path='/profile'
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/languages'
-            element={
-              <ProtectedRoute>
-                <Languages />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/languages/:id'
-            element={
-              <ProtectedRoute>
-                <Language />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+          <Routes>
+            <Route
+              path='/'
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+            <Route path='/login' element={<Login />} />
+            <Route
+              path='/profile'
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/languages'
+              element={
+                <ProtectedRoute>
+                  <Languages />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/languages/:id'
+              element={
+                <ProtectedRoute>
+                  <Language />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </UserProgressProvider>
       </AuthProvider>
     </BrowserRouter>
   );
