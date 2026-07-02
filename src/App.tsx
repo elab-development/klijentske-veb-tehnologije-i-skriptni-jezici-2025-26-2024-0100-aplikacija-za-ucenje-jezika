@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { UserProgressProvider } from './contexts/UserProgressContext';
 import Languages from './pages/Languages';
+import Lesson from './pages/Lesson';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -46,6 +47,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Languages />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/languages/:languageId/lessons/:lessonId'
+              element={
+                <ProtectedRoute>
+                  <Lesson />
                 </ProtectedRoute>
               }
             />

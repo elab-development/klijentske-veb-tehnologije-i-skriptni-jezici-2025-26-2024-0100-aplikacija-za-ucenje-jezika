@@ -1,4 +1,5 @@
-import { CheckCircle2, Circle, Play } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Circle, Play } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 import type { Language } from '../types/Language';
 
@@ -47,11 +48,17 @@ const LanguageLessons = ({
       {language.lessons.map((lesson) => {
         const isCompleted = completedLessonIds.includes(lesson.id);
         const isCurrent = currentLessonId === lesson.id && !isCompleted;
+        const lessonActionLabel = isCompleted
+          ? 'Ponovi'
+          : isLearningLanguage
+            ? 'Radi lekciju'
+            : 'Otvori';
 
         return (
-          <article
+          <Link
             className={[
               'flex flex-col gap-4 rounded-2xl border-2 bg-white p-5 shadow-sm shadow-indigo-100 md:flex-row md:items-center',
+              'transition hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-100',
               isCompleted
                 ? 'border-emerald-100'
                 : isCurrent
@@ -59,6 +66,7 @@ const LanguageLessons = ({
                   : 'border-violet-100',
             ].join(' ')}
             key={lesson.id}
+            to={`/languages/${language.id}/lessons/${lesson.id}`}
           >
             <div
               className={[
@@ -87,29 +95,35 @@ const LanguageLessons = ({
               </div>
             </div>
 
-            <div
-              className={[
-                'flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold',
-                isCompleted
-                  ? 'bg-emerald-100 text-emerald-600'
-                  : isCurrent
-                    ? 'bg-indigo-100 text-indigo-600'
-                    : 'bg-violet-100 text-gray-500',
-              ].join(' ')}
-            >
-              {isCompleted ? (
-                <>
-                  <CheckCircle2 aria-hidden='true' className='h-4 w-4' />
-                  Završeno
-                </>
-              ) : (
-                <>
-                  <Circle aria-hidden='true' className='h-4 w-4' />
-                  {isLearningLanguage ? 'Treba završiti' : 'Nije započeto'}
-                </>
-              )}
+            <div className='flex shrink-0 flex-col gap-2 md:items-end'>
+              <div
+                className={[
+                  'flex items-center gap-2 rounded-full px-4 py-2 text-sm font-extrabold',
+                  isCompleted
+                    ? 'bg-emerald-100 text-emerald-600'
+                    : isCurrent
+                      ? 'bg-indigo-100 text-indigo-600'
+                      : 'bg-violet-100 text-gray-500',
+                ].join(' ')}
+              >
+                {isCompleted ? (
+                  <>
+                    <CheckCircle2 aria-hidden='true' className='h-4 w-4' />
+                    Završeno
+                  </>
+                ) : (
+                  <>
+                    <Circle aria-hidden='true' className='h-4 w-4' />
+                    {isLearningLanguage ? 'Treba završiti' : 'Nije započeto'}
+                  </>
+                )}
+              </div>
+              <span className='flex items-center gap-1 text-sm font-extrabold text-indigo-600'>
+                {lessonActionLabel}
+                <ArrowRight aria-hidden='true' className='h-4 w-4' />
+              </span>
             </div>
-          </article>
+          </Link>
         );
       })}
     </div>
