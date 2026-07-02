@@ -5,6 +5,7 @@ import {
   CircleCheck,
   CircleX,
   Flag,
+  Lightbulb,
   RotateCcw,
 } from 'lucide-react';
 import {
@@ -77,6 +78,32 @@ const getCorrectAnswer = (question: LessonQuestion) => {
   return question.correctAnswer;
 };
 
+const getAnswerShapeHint = (answer: string) => {
+  const words = answer.trim().split(/\s+/).filter(Boolean);
+
+  if (words.length === 0) {
+    return 'Obratite pažnju na značenje pitanja i već poznate reči iz lekcije.';
+  }
+
+  if (words.length > 1) {
+    return `Odgovor ima ${words.length} reči i počinje slovom "${words[0][0]}".`;
+  }
+
+  return `Odgovor ima ${words[0].length} slova i počinje slovom "${words[0][0]}".`;
+};
+
+const getQuestionHint = (question: LessonQuestion) => {
+  if (question.hint) {
+    return question.hint;
+  }
+
+  if (question.type === 'multipleChoice') {
+    return 'Uporedite značenje svake ponuđene opcije sa rečju iz pitanja.';
+  }
+
+  return getAnswerShapeHint(getCorrectAnswer(question));
+};
+
 const LessonContent = ({
   currentUserId,
   language,
@@ -89,6 +116,7 @@ const LessonContent = ({
   const [questionResults, setQuestionResults] = useState<
     Record<string, QuestionResult>
   >({});
+  const [visibleHintIds, setVisibleHintIds] = useState<string[]>([]);
   const [isCheckingAnswer, setIsCheckingAnswer] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [finishStatus, setFinishStatus] = useState<FinishStatus | null>(null);
@@ -102,6 +130,10 @@ const LessonContent = ({
   const currentResult = currentQuestion
     ? questionResults[currentQuestion.id]
     : undefined;
+  const currentHint = currentQuestion ? getQuestionHint(currentQuestion) : '';
+  const isHintVisible = currentQuestion
+    ? visibleHintIds.includes(currentQuestion.id)
+    : false;
   const textAnswer = currentQuestion
     ? (currentResult?.submittedAnswer ?? answerDrafts[currentQuestion.id] ?? '')
     : '';
@@ -142,6 +174,16 @@ const LessonContent = ({
       ...currentResults,
       [currentQuestion.id]: result,
     }));
+  };
+
+  const toggleHint = () => {
+    setVisibleHintIds((currentVisibleHintIds) =>
+      currentVisibleHintIds.includes(currentQuestion.id)
+        ? currentVisibleHintIds.filter(
+            (visibleHintId) => visibleHintId !== currentQuestion.id,
+          )
+        : [...currentVisibleHintIds, currentQuestion.id],
+    );
   };
 
   const handleMultipleChoice = (optionId: string) => {
@@ -252,6 +294,7 @@ const LessonContent = ({
     setQuestionIndex(0);
     setAnswerDrafts({});
     setQuestionResults({});
+    setVisibleHintIds([]);
     setIsFinished(false);
     setFinishStatus(null);
   };
@@ -414,10 +457,23 @@ const LessonContent = ({
                 {currentQuestion.question}
               </h2>
 
-              {currentQuestion.hint && (
-                <p className='mt-3 text-sm font-bold text-gray-500'>
-                  Hint: {currentQuestion.hint}
-                </p>
+              {currentHint && (
+                <div className='mt-5'>
+                  <button
+                    className='inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-2 text-sm font-extrabold text-amber-700 transition hover:bg-amber-200 active:scale-95'
+                    onClick={toggleHint}
+                    type='button'
+                  >
+                    <Lightbulb aria-hidden='true' className='h-4 w-4' />
+                    {isHintVisible ? 'Sakrij hint' : 'Prikaži hint'}
+                  </button>
+
+                  {isHintVisible && (
+                    <div className='mt-3 rounded-2xl border-2 border-amber-100 bg-amber-50 p-4 text-sm font-bold text-amber-800'>
+                      {currentHint}
+                    </div>
+                  )}
+                </div>
               )}
 
               {currentQuestion.type === 'multipleChoice' && (
