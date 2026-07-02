@@ -27,13 +27,16 @@ import type {
   Lesson as LessonModel,
   LessonQuestion,
 } from '../types/Language';
+import { validateWordTranslationAnswer } from '../services/translationApi';
 import { UserProgressManager } from '../types/UserProgress';
 
 interface QuestionResult {
   correctAnswer: string;
+  expectedAnswers: string[];
   isCorrect: boolean;
   selectedOptionId?: string;
   submittedAnswer: string;
+  validationSource?: 'api' | 'fallback';
 }
 
 type FinishStatus = 'repeated' | 'saved';
@@ -86,6 +89,7 @@ const LessonContent = ({
   const [questionResults, setQuestionResults] = useState<
     Record<string, QuestionResult>
   >({});
+  const [isCheckingAnswer, setIsCheckingAnswer] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [finishStatus, setFinishStatus] = useState<FinishStatus | null>(null);
 
@@ -152,16 +156,21 @@ const LessonContent = ({
 
     saveQuestionResult({
       correctAnswer,
+      expectedAnswers: [correctAnswer],
       isCorrect: optionId === currentQuestion.correctOptionId,
       selectedOptionId: optionId,
       submittedAnswer: selectedOption?.text ?? '',
     });
   };
 
-  const handleTextAnswer = (event: FormEvent<HTMLFormElement>) => {
+  const handleTextAnswer = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (currentQuestion.type === 'multipleChoice' || currentResult) {
+    if (
+      currentQuestion.type === 'multipleChoice' ||
+      currentResult ||
+      isCheckingAnswer
+    ) {
       return;
     }
 
@@ -174,8 +183,34 @@ const LessonContent = ({
 
     const correctAnswer = getCorrectAnswer(currentQuestion);
 
+    if (currentQuestion.type === 'wordTranslation') {
+      setIsCheckingAnswer(true);
+
+      try {
+        const validationResult = await validateWordTranslationAnswer({
+          fallbackAnswer: correctAnswer,
+          question: currentQuestion,
+          submittedAnswer,
+          targetLanguageCode: language.shortCode,
+        });
+
+        saveQuestionResult({
+          correctAnswer,
+          expectedAnswers: validationResult.expectedAnswers,
+          isCorrect: validationResult.isCorrect,
+          submittedAnswer,
+          validationSource: validationResult.source,
+        });
+      } finally {
+        setIsCheckingAnswer(false);
+      }
+
+      return;
+    }
+
     saveQuestionResult({
       correctAnswer,
+      expectedAnswers: [correctAnswer],
       isCorrect:
         normalizeAnswer(submittedAnswer) === normalizeAnswer(correctAnswer),
       submittedAnswer,
@@ -445,7 +480,7 @@ const LessonContent = ({
                           : 'border-rose-400 bg-rose-50 text-rose-700'
                         : 'border-violet-100 bg-violet-50 text-indigo-950 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-100',
                     ].join(' ')}
-                    disabled={Boolean(currentResult)}
+                    disabled={Boolean(currentResult) || isCheckingAnswer}
                     onChange={(event) => updateTextAnswer(event.target.value)}
                     placeholder='Unesite odgovor'
                     type='text'
@@ -454,11 +489,13 @@ const LessonContent = ({
                   {!currentResult && (
                     <button
                       className='flex w-full items-center justify-center gap-2 rounded-full bg-indigo-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-indigo-200 transition hover:brightness-110 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60'
-                      disabled={!textAnswer.trim()}
+                      disabled={!textAnswer.trim() || isCheckingAnswer}
                       type='submit'
                     >
                       <CheckCircle2 aria-hidden='true' className='h-4 w-4' />
-                      Proveri odgovor
+                      {isCheckingAnswer
+                        ? 'Proveravam preko API-ja...'
+                        : 'Proveri odgovor'}
                     </button>
                   )}
                 </form>
@@ -470,7 +507,7 @@ const LessonContent = ({
                   {!currentResult && (
                     <button
                       className='flex w-full items-center justify-center gap-2 rounded-full bg-indigo-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-indigo-200 transition hover:brightness-110 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60'
-                      disabled={!textAnswer.trim()}
+                      disabled={!textAnswer.trim() || isCheckingAnswer}
                       type='submit'
                     >
                       <CheckCircle2 aria-hidden='true' className='h-4 w-4' />
@@ -495,9 +532,20 @@ const LessonContent = ({
                     <CircleX aria-hidden='true' className='mt-0.5 h-5 w-5' />
                   )}
                   <span>
-                    {currentResult.isCorrect
-                      ? 'Tačno! Možete preći na sledeće pitanje.'
-                      : `Nije tačno. Tačan odgovor je: ${currentResult.correctAnswer}.`}
+                    {currentResult.isCorrect ? (
+                      <>
+                        Tačno! Možete preći na sledeće pitanje.
+                        {currentResult.validationSource === 'api' &&
+                          ' Prevod je proveren preko MyMemory API-ja.'}
+                      </>
+                    ) : (
+                      <>
+                        Nije tačno. Tačan odgovor je:{' '}
+                        {currentResult.correctAnswer}.
+                        {currentResult.validationSource === 'fallback' &&
+                          ' API trenutno nije dostupan, pa je korišćen lokalni odgovor.'}
+                      </>
+                    )}
                   </span>
                 </div>
               )}
@@ -505,7 +553,7 @@ const LessonContent = ({
               <div className='mt-8 flex items-center justify-between gap-3'>
                 <button
                   className='flex items-center gap-2 rounded-full bg-violet-100 px-5 py-3 text-sm font-extrabold text-indigo-950 transition hover:bg-violet-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50'
-                  disabled={safeQuestionIndex === 0}
+                  disabled={safeQuestionIndex === 0 || isCheckingAnswer}
                   onClick={handlePreviousQuestion}
                   type='button'
                 >
@@ -515,7 +563,7 @@ const LessonContent = ({
 
                 <button
                   className='flex items-center gap-2 rounded-full bg-indigo-600 px-5 py-3 text-sm font-extrabold text-white shadow-lg shadow-indigo-200 transition hover:brightness-110 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50'
-                  disabled={!currentResult}
+                  disabled={!currentResult || isCheckingAnswer}
                   onClick={handleNextQuestion}
                   type='button'
                 >

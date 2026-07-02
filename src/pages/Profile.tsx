@@ -2,19 +2,24 @@ import { LogOut, UserRound } from 'lucide-react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
+import UserLanguagesProgress from '../components/UserLanguagesProgress';
 import { useAuth } from '../contexts/AuthContext';
+import { useUserProgress } from '../contexts/UserProgressContext';
 
 const Profile = () => {
   const { currentUser, logout } = useAuth();
+  const { getUserProgress } = useUserProgress();
   const navigate = useNavigate();
 
   if (!currentUser) {
     return <Navigate replace to='/login' />;
   }
 
+  const userProgress = getUserProgress(currentUser.id);
+
   const handleLogout = () => {
     logout();
-    toast.success('Uspesno ste se odjavili.');
+    toast.success('Uspešno ste se odjavili.');
     navigate('/login');
   };
 
@@ -45,19 +50,11 @@ const Profile = () => {
         </div>
 
         <div className='mt-8'>
-          <h2 className='font-display text-lg text-indigo-950'>
-            Jezici koje ucite
-          </h2>
-          <div className='mt-4 flex flex-wrap gap-3'>
-            {currentUser.learningLanguages?.map((language) => (
-              <span
-                className='rounded-full bg-violet-100 px-4 py-2 text-sm font-extrabold text-indigo-700'
-                key={language}
-              >
-                {language}
-              </span>
-            ))}
-          </div>
+          <UserLanguagesProgress
+            emptyMessage='Još uvek nemate izabranih jezika.'
+            title='Jezici koje učite'
+            userProgress={userProgress}
+          />
         </div>
       </section>
     </main>
