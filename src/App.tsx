@@ -4,7 +4,6 @@ import { Toaster } from 'react-hot-toast';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { UserProgressProvider } from './contexts/UserProgressContext';
-import Language from './pages/Language';
 import Languages from './pages/Languages';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
@@ -47,14 +46,6 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Languages />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/languages/:id'
-              element={
-                <ProtectedRoute>
-                  <Language />
                 </ProtectedRoute>
               }
             />
