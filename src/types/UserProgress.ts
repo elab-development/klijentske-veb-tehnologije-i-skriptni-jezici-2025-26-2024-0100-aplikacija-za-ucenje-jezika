@@ -98,15 +98,8 @@ export class UserProgressManager {
     };
   }
 
-  completeLesson(
-    languageId: string,
-    lessonId: string,
-    nextLessonId?: string,
-  ) {
-    const nextUserProgress = this.startLearningLanguage(
-      languageId,
-      nextLessonId ?? lessonId,
-    );
+  completeLesson(languageId: string, lessonId: string) {
+    const nextUserProgress = this.startLearningLanguage(languageId, lessonId);
 
     return {
       ...nextUserProgress,
@@ -125,7 +118,7 @@ export class UserProgressManager {
             ...languageProgress.completedLessonIds,
             lessonId,
           ],
-          currentLessonId: nextLessonId,
+          currentLessonId: lessonId,
         };
       }),
     };

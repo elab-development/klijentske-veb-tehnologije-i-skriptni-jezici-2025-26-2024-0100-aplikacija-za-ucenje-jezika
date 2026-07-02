@@ -4,8 +4,8 @@ import { Toaster } from 'react-hot-toast';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
 import { UserProgressProvider } from './contexts/UserProgressContext';
+import Language from './pages/Language';
 import Languages from './pages/Languages';
-import Lesson from './pages/Lesson';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -51,10 +51,10 @@ function App() {
               }
             />
             <Route
-              path='/languages/:languageId/lessons/:lessonId'
+              path='/languages/:id'
               element={
                 <ProtectedRoute>
-                  <Lesson />
+                  <Language />
                 </ProtectedRoute>
               }
             />

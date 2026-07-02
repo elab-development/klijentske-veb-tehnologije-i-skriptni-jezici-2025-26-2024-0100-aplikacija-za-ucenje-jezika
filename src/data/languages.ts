@@ -85,7 +85,7 @@ const languageData: LanguageData[] = [
         fillBlank('english-greetings-2', 'Dopuni pozdrav.', 'Good ____!', 'morning'),
         wordTranslation('english-greetings-3', 'Napiši reč na engleskom.', 'Hvala', 'thank you'),
       ]),
-      createLesson('english-family', 2, 'Porodica', 'Reči za članove porodice.', [
+      createLesson('english-family', 2, 'Porodica', 'Reci za clanove porodice.', [
         multipleChoice(
           'english-family-1',
           'Šta znači "father"?',
@@ -105,7 +105,7 @@ const languageData: LanguageData[] = [
         fillBlank('english-numbers-2', 'Dopuni niz.', 'One, two, ____.', 'three'),
         wordTranslation('english-numbers-3', 'Napiši reč na engleskom.', 'deset', 'ten'),
       ]),
-      createLesson('english-colors', 4, 'Boje', 'Najčešće boje u svakodnevnom govoru.', [
+      createLesson('english-colors', 4, 'Boje', 'Najcesce boje u svakodnevnom govoru.', [
         multipleChoice(
           'english-colors-1',
           'Šta znači "blue"?',
@@ -135,7 +135,7 @@ const languageData: LanguageData[] = [
         fillBlank('english-animals-2', 'Dopuni rečenicu.', 'A ____ says meow.', 'cat'),
         wordTranslation('english-animals-3', 'Napiši reč na engleskom.', 'riba', 'fish'),
       ]),
-      createLesson('english-home', 7, 'Kuća', 'Prostorije i predmeti u kući.', [
+      createLesson('english-home', 7, 'Kuca', 'Prostorije i predmeti u kući.', [
         multipleChoice(
           'english-home-1',
           'Šta znači "kitchen"?',
@@ -155,7 +155,7 @@ const languageData: LanguageData[] = [
         fillBlank('english-school-2', 'Dopuni rečenicu.', 'I write with a ____.', 'pencil'),
         wordTranslation('english-school-3', 'Napiši reč na engleskom.', 'učitelj', 'teacher'),
       ]),
-      createLesson('english-travel', 9, 'Putovanje', 'Reči za putovanja i prevoz.', [
+      createLesson('english-travel', 9, 'Putovanje', 'Reci za putovanja i prevoz.', [
         multipleChoice(
           'english-travel-1',
           'Šta znači "train"?',
@@ -193,7 +193,7 @@ const languageData: LanguageData[] = [
         fillBlank('german-greetings-2', 'Dopuni pozdrav.', 'Guten ____!', 'Morgen'),
         wordTranslation('german-greetings-3', 'Napiši reč na nemačkom.', 'hvala', 'danke'),
       ]),
-      createLesson('german-family', 2, 'Porodica', 'Članovi porodice na nemačkom.', [
+      createLesson('german-family', 2, 'Porodica', 'Clanovi porodice na nemačkom.', [
         multipleChoice(
           'german-family-1',
           'Šta znači "Mutter"?',
@@ -243,7 +243,7 @@ const languageData: LanguageData[] = [
         fillBlank('german-animals-2', 'Dopuni rečenicu.', 'Eine ____ sagt miau.', 'Katze'),
         wordTranslation('german-animals-3', 'Napiši reč na nemačkom.', 'ptica', 'Vogel'),
       ]),
-      createLesson('german-home', 7, 'Kuća', 'Prostorije i predmeti u kući.', [
+      createLesson('german-home', 7, 'Kuca', 'Prostorije i predmeti u kući.', [
         multipleChoice(
           'german-home-1',
           'Šta znači "Küche"?',
@@ -291,7 +291,7 @@ const languageData: LanguageData[] = [
     shortCode: 'es',
     nativeName: 'Español',
     lessons: [
-      createLesson('spanish-greetings', 1, 'Pozdravi', 'Osnovni španski pozdravi.', [
+      createLesson('spanish-greetings', 1, 'Pozdravi', 'Osnovni spanski pozdravi.', [
         multipleChoice(
           'spanish-greetings-1',
           'Šta znači "Hola"?',
@@ -301,7 +301,7 @@ const languageData: LanguageData[] = [
         fillBlank('spanish-greetings-2', 'Dopuni pozdrav.', 'Buenos ____!', 'días'),
         wordTranslation('spanish-greetings-3', 'Napiši reč na španskom.', 'hvala', 'gracias'),
       ]),
-      createLesson('spanish-family', 2, 'Porodica', 'Članovi porodice na španskom.', [
+      createLesson('spanish-family', 2, 'Porodica', 'Clanovi porodice na španskom.', [
         multipleChoice(
           'spanish-family-1',
           'Šta znači "madre"?',
@@ -351,7 +351,7 @@ const languageData: LanguageData[] = [
         fillBlank('spanish-animals-2', 'Dopuni rečenicu.', 'Un ____ dice miau.', 'gato'),
         wordTranslation('spanish-animals-3', 'Napiši reč na španskom.', 'ptica', 'pájaro'),
       ]),
-      createLesson('spanish-home', 7, 'Kuća', 'Prostorije i predmeti u kući.', [
+      createLesson('spanish-home', 7, 'Kuca', 'Prostorije i predmeti u kući.', [
         multipleChoice(
           'spanish-home-1',
           'Šta znači "cocina"?',

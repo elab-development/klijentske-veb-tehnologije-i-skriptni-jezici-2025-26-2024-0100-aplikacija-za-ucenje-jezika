@@ -25,7 +25,6 @@ interface UserProgressContextValue {
     userId: number,
     languageId: string,
     lessonId: string,
-    nextLessonId?: string,
   ) => void;
 }
 
@@ -127,11 +126,10 @@ export const UserProgressProvider = ({ children }: PropsWithChildren) => {
     userId: number,
     languageId: string,
     lessonId: string,
-    nextLessonId?: string,
   ) => {
     const updatedUserProgress = new UserProgressManager(
       getUserProgress(userId),
-    ).completeLesson(languageId, lessonId, nextLessonId);
+    ).completeLesson(languageId, lessonId);
 
     updateUserProgress(updatedUserProgress);
   };

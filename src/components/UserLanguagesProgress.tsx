@@ -58,7 +58,7 @@ const UserLanguagesProgress = ({
               <Link
                 className='rounded-2xl border border-violet-100 bg-white p-6 shadow-sm shadow-indigo-100 transition hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-100'
                 key={language.id}
-                to={`/languages?language=${language.id}`}
+                to={`/languages/${language.id}`}
               >
                 <div className='mb-5 flex items-start justify-between gap-4'>
                   <div>
