@@ -6,6 +6,7 @@ import LanguageLessons from '../components/LanguageLessons';
 import { useAuth } from '../contexts/AuthContext';
 import { useUserProgress } from '../contexts/UserProgressContext';
 import { languages } from '../data/languages';
+import { getLanguageFlagUrl } from '../services/flagApi';
 import { UserProgressManager } from '../types/UserProgress';
 
 const Languages = () => {
@@ -78,6 +79,7 @@ const Languages = () => {
               language.id,
               language.getLessonCount(),
             );
+            const flagUrl = getLanguageFlagUrl(language.shortCode);
 
             return (
               <button
@@ -92,13 +94,20 @@ const Languages = () => {
                 type='button'
               >
                 <div className='flex items-start justify-between gap-4'>
-                  <div>
-                    <h2 className='font-display text-2xl tracking-normal text-indigo-600'>
-                      {language.name}
-                    </h2>
-                    <p className='mt-1 text-sm font-bold text-gray-500'>
-                      {language.nativeName}
-                    </p>
+                  <div className='flex min-w-0 items-center gap-3'>
+                    <img
+                      alt={`Zastava za ${language.name}`}
+                      className='h-11 w-14 shrink-0 rounded-lg border border-violet-100 object-cover shadow-sm'
+                      src={flagUrl}
+                    />
+                    <div className='min-w-0'>
+                      <h2 className='font-display text-2xl tracking-normal text-indigo-600'>
+                        {language.name}
+                      </h2>
+                      <p className='mt-1 text-sm font-bold text-gray-500'>
+                        {language.nativeName}
+                      </p>
+                    </div>
                   </div>
                   <span
                     className={[
